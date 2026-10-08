@@ -2,9 +2,9 @@
 
 ## 1. Descrição
 
-Este MVP em Python gera senhas aleatórias. O script `gerador_senhas.py` permite
-escolher o tamanho e os grupos de caracteres; a interface `src.main` usa as
-regras fixas do core em `src`.
+Este MVP em Python gera senhas aleatórias por meio de um único core em `src`.
+As interfaces `src.main` e `gerador_senhas.py` permitem configurar tamanho e
+grupos de caracteres, mantendo padrões diferentes para compatibilidade.
 
 ## 2. Objetivo
 
@@ -15,23 +15,16 @@ de versão com Git e documentação.
 
 ## 3. Funcionalidades
 
-O projeto contém duas interfaces de terminal, com funcionalidades diferentes:
+O projeto contém duas interfaces de terminal que reutilizam o mesmo gerador:
 
-- `gerador_senhas.py` permite escolher o tamanho da senha e desativar grupos de
-  letras minúsculas, letras maiúsculas, números ou símbolos;
-- essa interface garante ao menos um caractere de cada grupo ativo e rejeita a
-  seleção sem grupos ou um tamanho menor que a quantidade de grupos ativos;
-- `gerador_senhas.py` também permite excluir os caracteres ambíguos `I`, `l`,
-  `1`, `O` e `0`;
-- `src.main` gera uma senha de seis caracteres, com pelo menos uma letra
-  minúscula e um número;
-- o módulo `src.validator` verifica se uma senha tem seis caracteres, contém
-  somente letras minúsculas e números, e possui ao menos um de cada;
-- o gerador em `src` usa o módulo `secrets` para escolher e embaralhar os
-  caracteres.
-
-As opções de tamanho e grupos pertencem a `gerador_senhas.py`; elas não são
-aceitas por `src.main`.
+- `src.main` aceita tamanho e grupos por argumentos CLI; sem grupos informados,
+  usa minúsculas e números, com tamanho padrão de seis caracteres;
+- `gerador_senhas.py` mantém tamanho padrão de 20 e todos os quatro grupos
+  habilitados; também permite desativar grupos e excluir caracteres ambíguos;
+- o core garante ao menos um caractere de cada grupo selecionado e rejeita
+  critérios sem grupos ou com tamanho insuficiente;
+- `src.validator` valida senhas conforme o tamanho e os grupos escolhidos;
+- o core usa `secrets` para escolher e embaralhar os caracteres.
 
 ## 4. Arquitetura e estrutura do projeto
 
@@ -49,22 +42,20 @@ MVP/
 │   ├── test_main.py
 │   └── test_validator.py
 ├── gerador_senhas.py
-├── requirements.txt
-├── README.md
 ├── test_gerador_senhas.py
+├── requirements.txt
+└── README.md
 ```
 
-- `src/main.py`: interpreta os argumentos de `src.main`, chama o gerador do
-  core e apresenta a senha ou uma mensagem de erro. Atualmente só aceita a
-  ajuda automática `--help`; a geração usa as regras fixas do core.
-- `src/generator.py`: gera uma senha de seis caracteres com letras minúsculas
-  e números, usando `secrets`.
-- `src/validator.py`: verifica se uma senha pronta atende às regras fixas do
-  core. Essa função não é chamada por `src.main`.
+- `src/main.py`: interpreta os argumentos da CLI, chama o gerador do core e
+  apresenta a senha ou uma mensagem de erro.
+- `src/generator.py`: implementação única da geração segura; seleciona os
+  grupos, garante sua presença e usa `secrets`.
+- `src/validator.py`: centraliza os critérios e valida se uma senha atende ao
+  tamanho e aos grupos selecionados.
 - `tests/`: contém testes pytest para o gerador, o validador e a CLI em `src`.
-- `gerador_senhas.py`: oferece uma segunda interface de terminal com opções
-  configuráveis de tamanho e grupos; sua geração e validação estão nesse
-  próprio arquivo.
+- `gerador_senhas.py`: interface de terminal compatível que converte suas
+  opções para os parâmetros do gerador em `src`.
 - `test_gerador_senhas.py`: contém testes `unittest` para o script
   `gerador_senhas.py`.
 - `.gitignore`: exclui do Git ambientes virtuais, caches, arquivos temporários
@@ -78,16 +69,14 @@ MVP/
 
 O projeto tem dois fluxos de execução:
 
-1. Com `python -m src.main`, o usuário pode pedir ajuda com `--help` ou executar
-   a geração padrão. O `argparse` interpreta a linha de comando; a CLI chama
-   `src.generator.gerar_senha()` sem argumentos; o core gera a senha e a CLI
-   apresenta o resultado. A validação disponível em `src.validator` é
-   independente e não participa desse fluxo.
-2. Com `python gerador_senhas.py`, o usuário informa tamanho e grupos usando
-   as opções próprias desse script. O `argparse` interpreta essas opções; o
-   script verifica se há grupos ativos e se o tamanho é suficiente; em seguida
-   gera a senha e apresenta o resultado. Erros de configuração são exibidos
-   como mensagens da CLI.
+1. O usuário informa tamanho e grupos em uma das interfaces de terminal.
+2. `argparse` interpreta os argumentos e a interface os converte em parâmetros
+   do core.
+3. A validação em `src.validator` verifica os critérios, incluindo a seleção de
+   grupos e o tamanho mínimo necessário.
+4. `src.generator` cria a senha usando `secrets` e garante ao menos um
+   caractere de cada grupo selecionado.
+5. A CLI apresenta a senha ou uma mensagem de erro.
 
 ## 6. Tecnologias utilizadas
 
@@ -148,10 +137,30 @@ biblioteca padrão do Python.
 
 ## 9. Como utilizar
 
-### Interface configurável
+### CLI modular principal
 
-O script `gerador_senhas.py` gera por padrão uma senha de 20 caracteres com os
-quatro grupos. Use `--help` para ver todas as opções:
+O módulo `src.main` gera por padrão seis caracteres com minúsculas e números.
+Use `--help` para ver as opções:
+
+```powershell
+python -m src.main --help
+```
+
+Gerar uma senha com os quatro grupos e 16 caracteres:
+
+```powershell
+python -m src.main --length 16 --lowercase --uppercase --numbers --symbols
+```
+
+Usar a forma abreviada `-l` e selecionar apenas letras maiúsculas:
+
+```powershell
+python -m src.main -l 12 --uppercase
+```
+
+O script `gerador_senhas.py` mantém o padrão de 20 caracteres com
+os quatro grupos. Também oferece opções de quantidade e exclusão de caracteres
+ambíguos. Use `--help` para ver todas as opções:
 
 ```powershell
 python gerador_senhas.py --help
@@ -188,15 +197,15 @@ Desativar todos os grupos também é inválido:
 python gerador_senhas.py --sem-minusculas --sem-maiusculas --sem-numeros --sem-simbolos
 ```
 
-As opções configuráveis são exclusivas de `gerador_senhas.py`. Para executar
-a interface modular `src.main`, use:
+Os dois comandos reutilizam a geração em `src.generator`. Para executar a
+interface modular sem opções, use:
 
 ```powershell
 python -m src.main
 ```
 
-Essa interface gera uma senha segundo as regras fixas do core. A única opção
-de linha de comando disponível nela é `--help`.
+Sem flags de grupo, `src.main` usa minúsculas e números. Quando uma ou mais
+flags de grupo são informadas, somente os grupos indicados são selecionados.
 
 ## 10. Exemplos de saída
 
@@ -209,11 +218,11 @@ Geração pelo módulo `src.main`:
 Senha gerada: a3k8q2
 ```
 
-Erro ao definir tamanho menor que os quatro grupos padrão em
+Erro ao definir tamanho menor que os quatro grupos selecionados em
 `gerador_senhas.py`:
 
 ```text
-gerador_senhas.py: error: O comprimento deve ser pelo menos igual ao número de classes selecionadas (4).
+gerador_senhas.py: error: O tamanho deve ser pelo menos igual à quantidade de grupos selecionados (4).
 ```
 
 Erro ao desativar todos os grupos em `gerador_senhas.py`:
@@ -255,7 +264,7 @@ por pytest.
 - A CLI em `src/main.py` fica separada do gerador para manter a interação com
   o terminal fora da implementação do core.
 - A validação em `src/validator.py` fica em um módulo próprio para separar a
-  verificação de uma senha pronta da sua geração.
+  verificação dos critérios e de uma senha pronta da lógica de geração.
 - Os testes verificam propriedades, como tamanho, caracteres permitidos e
   mensagens, em vez de esperar uma senha específica, pois a saída é aleatória.
 
@@ -265,9 +274,8 @@ por pytest.
 - Não armazena senhas.
 - Não possui integração com banco de dados.
 - Não funciona como gerenciador ou cofre de senhas.
-- A interface `src.main` não permite configurar tamanho ou grupos; essa
-  configuração está disponível apenas no script `gerador_senhas.py`.
-- A validação em `src.validator` não está conectada à execução da CLI modular.
+- A validação de uma senha pronta é oferecida pelo core, mas as CLIs não pedem
+  uma senha existente para validar; elas geram senhas novas.
 
 ## 14. Melhorias futuras
 
@@ -276,7 +284,7 @@ por pytest.
   modular.
 - Criar uma interface web ou gráfica.
 - Permitir configurar quais símbolos podem ser usados.
-- Unificar as duas interfaces e conectar a validação do core ao fluxo da CLI.
+- Permitir validar uma senha existente por uma das interfaces de terminal.
 
 ## 15. Uso da IA generativa
 

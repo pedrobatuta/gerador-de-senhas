@@ -17,6 +17,28 @@ def test_aceita_senha_com_letras_minusculas_e_numeros():
     assert validar_senha("abc123")
 
 
+def test_valida_senha_com_criterios_configurados():
+    assert validar_senha(
+        "Ab3!",
+        comprimento=4,
+        incluir_minusculas=True,
+        incluir_maiusculas=True,
+        incluir_numeros=True,
+        incluir_simbolos=True,
+    )
+
+
+def test_rejeita_senha_sem_um_dos_grupos_selecionados():
+    assert not validar_senha(
+        "Abc!",
+        comprimento=4,
+        incluir_minusculas=True,
+        incluir_maiusculas=True,
+        incluir_numeros=True,
+        incluir_simbolos=True,
+    )
+
+
 @pytest.mark.parametrize("senha", ["abcdef", "123456"])
 def test_rejeita_senha_sem_letra_minuscula_ou_sem_numero(senha):
     assert not validar_senha(senha)
