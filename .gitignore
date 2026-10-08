@@ -1,0 +1,38 @@
+# Ambientes virtuais Python
+.venv/
+venv/
+
+# Cache e arquivos compilados do Python
+__pycache__/
+*.py[cod]
+
+# Cache e relatórios de cobertura de testes
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Configurações locais e variáveis de ambiente
+.env
+.env.*
+.vscode/
+
+# Arquivos temporários do Windows
+Thumbs.db
+Desktop.ini
+*.tmp
+*.temp
+~$*
+
+# Arquivos temporários comuns de editores
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+
+# Artefatos de empacotamento Python
+build/
+dist/
+*.egg-info/
