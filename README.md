@@ -37,8 +37,7 @@ aceitas por `src.main`.
 
 ```text
 MVP/
-├── .vscode/
-│   └── settings.json
+├── .gitignore
 ├── src/
 │   ├── __init__.py
 │   ├── generator.py
@@ -50,8 +49,9 @@ MVP/
 │   ├── test_main.py
 │   └── test_validator.py
 ├── gerador_senhas.py
+├── requirements.txt
+├── README.md
 ├── test_gerador_senhas.py
-└── README.md
 ```
 
 - `src/main.py`: interpreta os argumentos de `src.main`, chama o gerador do
@@ -67,9 +67,10 @@ MVP/
   próprio arquivo.
 - `test_gerador_senhas.py`: contém testes `unittest` para o script
   `gerador_senhas.py`.
-- `.vscode/settings.json`: contém uma configuração local do Visual Studio Code
-  para o ambiente Python.
-- `.gitignore`: não existe atualmente na raiz do projeto.
+- `.gitignore`: exclui do Git ambientes virtuais, caches, arquivos temporários
+  e outros artefatos locais.
+- `requirements.txt`: lista `pytest`, dependência externa usada para executar
+  os testes.
 - `README.md`: documenta o projeto, suas interfaces e como executar o código e
   os testes.
 
@@ -139,10 +140,10 @@ biblioteca padrão do Python.
    .\.venv\Scripts\Activate.ps1
    ```
 
-5. Instale pytest. O projeto não possui `requirements.txt`:
+5. Instale as dependências listadas em `requirements.txt`:
 
    ```powershell
-   python -m pip install pytest
+   python -m pip install -r requirements.txt
    ```
 
 ## 9. Como utilizar
