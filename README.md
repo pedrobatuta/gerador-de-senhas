@@ -31,6 +31,7 @@ O projeto contém duas interfaces de terminal que reutilizam o mesmo gerador:
 ```text
 MVP/
 ├── .gitignore
+├── LICENSE
 ├── src/
 │   ├── __init__.py
 │   ├── generator.py
@@ -60,6 +61,8 @@ MVP/
   `gerador_senhas.py`.
 - `.gitignore`: exclui do Git ambientes virtuais, caches, arquivos temporários
   e outros artefatos locais.
+- `LICENSE`: define os termos de uso, cópia, modificação e distribuição do
+  projeto sob a licença MIT.
 - `requirements.txt`: lista `pytest`, dependência externa usada para executar
   os testes.
 - `README.md`: documenta o projeto, suas interfaces e como executar o código e
@@ -294,6 +297,11 @@ modelo de linguagem selecionado no Copilot não foi registrado durante o
 desenvolvimento e, por isso, não pode ser identificado com confiabilidade.
 As sugestões foram revisadas e testadas antes de serem aceitas.
 
-## 16. Autor
+## 16. Licença
+
+Este projeto está licenciado sob a licença MIT. Consulte o arquivo
+[LICENSE](LICENSE) para ver os termos completos.
+
+## 17. Autor
 
 Pedro Egidio Alves de Oliveira
