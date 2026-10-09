@@ -289,7 +289,9 @@ por pytest.
 ## 15. Uso da IA generativa
 
 O GitHub Copilot foi utilizado como apoio ao planejamento da estrutura, à
-implementação orientada, à criação e revisão de testes e à documentação.
+implementação orientada, à criação e revisão de testes e à documentação. O
+modelo de linguagem selecionado no Copilot não foi registrado durante o
+desenvolvimento e, por isso, não pode ser identificado com confiabilidade.
 As sugestões foram revisadas e testadas antes de serem aceitas.
 
 ## 16. Autor
